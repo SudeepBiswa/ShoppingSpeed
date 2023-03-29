@@ -24,5 +24,20 @@ fun SetupNavGraph(
         ){
             DifficultyScreen(navController = navController)
         }
+        composable(
+            route = Screen.EasyLvl.route
+        ){
+            EasyLevel()
+        }
+        composable(
+            route = Screen.NormalLvl.route
+        ){
+            NormalLevel()
+        }
+        composable(
+            route = Screen.HardLvl.route
+        ){
+            HardLevel()
+        }
     }
 }
