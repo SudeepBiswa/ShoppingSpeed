@@ -27,7 +27,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.EasyLvl.route
         ){
-            EasyLevel()
+            EasyLevel(navController= navController)
         }
         composable(
             route = Screen.NormalLvl.route

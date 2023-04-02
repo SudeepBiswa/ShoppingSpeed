@@ -1,6 +1,15 @@
 package com.example.shoppingspeed
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 /*
 I could have a array of all items in store.
@@ -14,6 +23,8 @@ I can have item list on the top and have item turn green when user clicks on ite
     - I will need to figure out SavedStates
 */
 @Composable
-fun EasyLevel(){
+fun EasyLevel(navController: NavController){
+    Column(modifier = Modifier.border(width = 5.dp,brush = Brush.horizontalGradient(), shape = RectangleShape )){
 
+    }
 }
