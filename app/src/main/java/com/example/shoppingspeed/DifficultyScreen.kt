@@ -17,7 +17,9 @@ fun DifficultyScreen(navController: NavController){
     Column (horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.SpaceEvenly,
     modifier = Modifier.fillMaxSize()){
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = {
+            navController.navigate(Screen.EasyLvl.route)
+        }) {
             Text("Easy", fontFamily = bubbley, fontSize = 40.sp)
         }
         Button(onClick = { /*TODO*/ }) {
