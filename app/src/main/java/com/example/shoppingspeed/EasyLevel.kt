@@ -42,7 +42,7 @@ I can have item list on the top and have item turn green when user clicks on ite
 
 var shoppingItems = arrayOf("beef","apples","onions","tomatoes","pork","sugar","bacon","eggs","pasta","rice","pizza","vinegar", "popcorn","pastasauce","potatoes",
     "bread","milk","lemon","oil","cereal","butter","bananas","cheese","strawberries")
-var itemImges = arrayOf(R.drawable.beef, R.drawable.apples, R.drawable.onions, R.drawable.tomatoes, R.drawable.pork, R.drawable.sugar, R.drawable.eggs, R.drawable.pasta, R.drawable.rice, R.drawable.pizza, R.drawable.vinegar,
+var itemImges = arrayOf(R.drawable.beef, R.drawable.apples, R.drawable.onions, R.drawable.tomatoes, R.drawable.pork, R.drawable.sugar, R.drawable.bacon, R.drawable.eggs, R.drawable.pasta, R.drawable.rice, R.drawable.pizza, R.drawable.vinegar,
     R.drawable.popcorn, R.drawable.pastasauce, R.drawable.potatoes, R.drawable.bread, R.drawable.milk, R.drawable.lemon, R.drawable.oil, R.drawable.cereal, R.drawable.butter, R.drawable.bananas, R.drawable.cheese, R.drawable.strawberries)
 
 var score: Int = 0
@@ -74,7 +74,7 @@ fun EasyLevel(navController: NavController){
 
 @Composable
 fun grid(){
-    var gridItem = ""
+    //var gridItem = ""
     var gridItems = ""
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
@@ -88,25 +88,25 @@ fun grid(){
                         .padding(12.dp)
                         .aspectRatio(1f)
                         .clip(RoundedCornerShape(5.dp))
-                        .background(Color.Green),
+                        .background(Color.Transparent),
                     contentAlignment = Alignment.Center
                 ){
                     gridItems = shoppingItems[i]
                     Image(painter = painterResource(id = itemImges[i]), contentDescription = null)
-                    Text(text = gridItems, modifier = Modifier.align(Alignment.TopCenter))
+                    Text(text = gridItems, modifier = Modifier.align(Alignment.TopCenter), fontSize = 20.sp, fontFamily = bubbley)
                 }
             }
         })
 }
-
+var item1 = shoppingItems[Random.nextInt(0,23)]
+var item2 = shoppingItems[Random.nextInt(0,23)]
+var item3 = shoppingItems[Random.nextInt(0,23)]
+var item4 = shoppingItems[Random.nextInt(0,23)]
+var item5 = shoppingItems[Random.nextInt(0,23)]
+var item6 = shoppingItems[Random.nextInt(0,23)]
 @Composable
 fun createItems(){
-    var item1 = shoppingItems[Random.nextInt(0,23)]
-    var item2 = shoppingItems[Random.nextInt(0,23)]
-    var item3 = shoppingItems[Random.nextInt(0,23)]
-    var item4 = shoppingItems[Random.nextInt(0,23)]
-    var item5 = shoppingItems[Random.nextInt(0,23)]
-    var item6 = shoppingItems[Random.nextInt(0,23)]
+
         Column(modifier = Modifier.padding(8.dp)) {
             Text(text = item1)
         }
@@ -128,7 +128,7 @@ fun createItems(){
         Column(modifier = Modifier.padding(8.dp)) {
             Text(text = "$score")
         }
-
-
 }
+
+
 
