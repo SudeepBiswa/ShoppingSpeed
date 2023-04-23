@@ -2,6 +2,7 @@ package com.example.shoppingspeed
 
 import android.os.CountDownTimer
 import android.util.Log
+import android.widget.TextView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,10 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.shoppingspeed.ui.theme.bubbley
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import org.w3c.dom.Text
 import kotlin.random.Random
 
 /*
@@ -45,9 +44,10 @@ var shoppingItems = arrayOf("beef","apples","onions","tomatoes","pork","sugar","
 var itemImges = arrayOf(R.drawable.beef, R.drawable.apples, R.drawable.onions, R.drawable.tomatoes, R.drawable.pork, R.drawable.sugar, R.drawable.bacon, R.drawable.eggs, R.drawable.pasta, R.drawable.rice, R.drawable.pizza, R.drawable.vinegar,
     R.drawable.popcorn, R.drawable.pastasauce, R.drawable.potatoes, R.drawable.bread, R.drawable.milk, R.drawable.lemon, R.drawable.oil, R.drawable.cereal, R.drawable.butter, R.drawable.bananas, R.drawable.cheese, R.drawable.strawberries)
 
-var score: Int = 0
+
 @Composable
 fun EasyLevel(navController: NavController){
+
     Column() {
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)){
             Text("THE SHOP", fontFamily = bubbley, fontSize = 80.sp)
@@ -55,10 +55,26 @@ fun EasyLevel(navController: NavController){
         Row (modifier = Modifier.align(Alignment.CenterHorizontally)){
             createItems()
         }
-        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Column(modifier = Modifier.padding(8.dp)){
+        Row(modifier = Modifier.align(Alignment.CenterHorizontally)){
+            Column() {
+                var timerText : MutableState<String> = remember { mutableStateOf("")}
 
+                object : CountDownTimer(30000, 1000) {
+
+                    override fun onTick(millisUntilFinished: Long) {
+                        timerText.value = "Time remaining: " + (millisUntilFinished / 1000) +"s"
+
+                    }
+
+                    override fun onFinish() {
+                        timerText.value = "done!"
+                        this.cancel()
+                    }
+                }.start()
+                Text(text = "${timerText.value}")
             }
+        }
+        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Column(modifier = Modifier.padding(8.dp)) {
                 Button(onClick = { navController.navigate(Screen.Home.route) }) {
                     Text(text = "QUIT", fontSize = 8.sp)
@@ -71,7 +87,12 @@ fun EasyLevel(navController: NavController){
 
 
 }
-
+var item1 = shoppingItems[Random.nextInt(0,23)]
+var item2 = shoppingItems[Random.nextInt(0,23)]
+var item3 = shoppingItems[Random.nextInt(0,23)]
+var item4 = shoppingItems[Random.nextInt(0,23)]
+var item5 = shoppingItems[Random.nextInt(0,23)]
+var item6 = shoppingItems[Random.nextInt(0,23)]
 @Composable
 fun grid(){
     //var gridItem = ""
@@ -83,7 +104,9 @@ fun grid(){
                 Box(
                     modifier = Modifier
                         .clickable {
+                            if(gridItems == item1 ||gridItems == item2 ||gridItems == item3 ||gridItems == item4 ||gridItems == item5 ||gridItems == item6){
 
+                            }
                         }
                         .padding(12.dp)
                         .aspectRatio(1f)
@@ -98,15 +121,10 @@ fun grid(){
             }
         })
 }
-var item1 = shoppingItems[Random.nextInt(0,23)]
-var item2 = shoppingItems[Random.nextInt(0,23)]
-var item3 = shoppingItems[Random.nextInt(0,23)]
-var item4 = shoppingItems[Random.nextInt(0,23)]
-var item5 = shoppingItems[Random.nextInt(0,23)]
-var item6 = shoppingItems[Random.nextInt(0,23)]
+
 @Composable
 fun createItems(){
-
+    var score: MutableState<Int> = remember { mutableStateOf(0) }
         Column(modifier = Modifier.padding(8.dp)) {
             Text(text = item1)
         }
@@ -126,9 +144,13 @@ fun createItems(){
             Text(text = item6)
         }
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = "$score")
+           Text(text = "${score.value}")
         }
+
+
 }
+
+
 
 
 
