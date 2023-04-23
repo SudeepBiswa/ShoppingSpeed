@@ -43,7 +43,7 @@ var shoppingItems = arrayOf("beef","apples","onions","tomatoes","pork","sugar","
     "bread","milk","lemon","oil","cereal","butter","bananas","cheese","strawberries")
 var itemImges = arrayOf(R.drawable.beef, R.drawable.apples, R.drawable.onions, R.drawable.tomatoes, R.drawable.pork, R.drawable.sugar, R.drawable.bacon, R.drawable.eggs, R.drawable.pasta, R.drawable.rice, R.drawable.pizza, R.drawable.vinegar,
     R.drawable.popcorn, R.drawable.pastasauce, R.drawable.potatoes, R.drawable.bread, R.drawable.milk, R.drawable.lemon, R.drawable.oil, R.drawable.cereal, R.drawable.butter, R.drawable.bananas, R.drawable.cheese, R.drawable.strawberries)
-
+var listItem = arrayOf(random(),)
 
 @Composable
 fun EasyLevel(navController: NavController){
@@ -87,12 +87,10 @@ fun EasyLevel(navController: NavController){
 
 
 }
-var item1 = shoppingItems[Random.nextInt(0,23)]
-var item2 = shoppingItems[Random.nextInt(0,23)]
-var item3 = shoppingItems[Random.nextInt(0,23)]
-var item4 = shoppingItems[Random.nextInt(0,23)]
-var item5 = shoppingItems[Random.nextInt(0,23)]
-var item6 = shoppingItems[Random.nextInt(0,23)]
+@Composable
+fun random(){
+    shoppingItems[Random.nextInt(0,23)]
+}
 @Composable
 fun grid(){
     //var gridItem = ""
