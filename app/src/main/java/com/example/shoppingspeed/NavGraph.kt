@@ -40,5 +40,10 @@ fun SetupNavGraph(
         ){
             HardLevel()
         }
+        composable(
+            route = Screen.WinScreen.route
+        ){
+            Win()
+        }
     }
 }

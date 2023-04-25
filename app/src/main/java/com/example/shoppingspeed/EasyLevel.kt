@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.shoppingspeed.ui.theme.bubbley
+import kotlinx.coroutines.delay
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import org.w3c.dom.Text
 import kotlin.random.Random
@@ -43,11 +44,11 @@ var shoppingItems = arrayOf("beef","apples","onions","tomatoes","pork","sugar","
     "bread","milk","lemon","oil","cereal","butter","bananas","cheese","strawberries")
 var itemImges = arrayOf(R.drawable.beef, R.drawable.apples, R.drawable.onions, R.drawable.tomatoes, R.drawable.pork, R.drawable.sugar, R.drawable.bacon, R.drawable.eggs, R.drawable.pasta, R.drawable.rice, R.drawable.pizza, R.drawable.vinegar,
     R.drawable.popcorn, R.drawable.pastasauce, R.drawable.potatoes, R.drawable.bread, R.drawable.milk, R.drawable.lemon, R.drawable.oil, R.drawable.cereal, R.drawable.butter, R.drawable.bananas, R.drawable.cheese, R.drawable.strawberries)
-var listItem = arrayOf(random(),)
+
+var score = mutableStateOf(0)
 
 @Composable
 fun EasyLevel(navController: NavController){
-
     Column() {
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)){
             Text("THE SHOP", fontFamily = bubbley, fontSize = 80.sp)
@@ -57,21 +58,7 @@ fun EasyLevel(navController: NavController){
         }
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)){
             Column() {
-                var timerText : MutableState<String> = remember { mutableStateOf("")}
-
-                object : CountDownTimer(30000, 1000) {
-
-                    override fun onTick(millisUntilFinished: Long) {
-                        timerText.value = "Time remaining: " + (millisUntilFinished / 1000) +"s"
-
-                    }
-
-                    override fun onFinish() {
-                        timerText.value = "done!"
-                        this.cancel()
-                    }
-                }.start()
-                Text(text = "${timerText.value}")
+                Timer(totalTime = 10L * 1000L)
             }
         }
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
@@ -85,24 +72,23 @@ fun EasyLevel(navController: NavController){
          grid() }
     }
 
-
 }
-@Composable
-fun random(){
-    shoppingItems[Random.nextInt(0,23)]
-}
+var item = mutableListOf<String>(shoppingItems[Random.nextInt(0,23)], shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)])
+//var item = arrayOf(shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],)
+//var gridItems = mutableStateOf("")
 @Composable
 fun grid(){
-    //var gridItem = ""
-    var gridItems = ""
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         content ={
-            items(24){i ->
+            items(24){
+                    i ->
+               var gridItems = shoppingItems[i]
                 Box(
                     modifier = Modifier
                         .clickable {
-                            if(gridItems == item1 ||gridItems == item2 ||gridItems == item3 ||gridItems == item4 ||gridItems == item5 ||gridItems == item6){
+                            if (gridItems == item[0] || gridItems == item[1] || gridItems == item[2] || gridItems == item[3] || gridItems == item[4] || gridItems == item[5]) {
+                                score.value++
 
                             }
                         }
@@ -112,9 +98,10 @@ fun grid(){
                         .background(Color.Transparent),
                     contentAlignment = Alignment.Center
                 ){
-                    gridItems = shoppingItems[i]
+
                     Image(painter = painterResource(id = itemImges[i]), contentDescription = null)
-                    Text(text = gridItems, modifier = Modifier.align(Alignment.TopCenter), fontSize = 20.sp, fontFamily = bubbley)
+                        Text(gridItems, fontSize = 20.sp, fontFamily = bubbley, modifier = Modifier.align(Alignment.TopCenter))
+
                 }
             }
         })
@@ -122,32 +109,55 @@ fun grid(){
 
 @Composable
 fun createItems(){
-    var score: MutableState<Int> = remember { mutableStateOf(0) }
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = item1)
+            Text(text = item[0])
         }
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = item2)
+            Text(text = item[1])
         }
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = item3)
+            Text(text = item[2])
         }
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = item4)
+            Text(text = item[3])
         }
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = item5)
+            Text(text = item[4])
         }
         Column(modifier = Modifier.padding(8.dp)) {
-            Text(text = item6)
+            Text(text = item[5])
         }
         Column(modifier = Modifier.padding(8.dp)) {
            Text(text = "${score.value}")
         }
-
-
 }
 
+@Composable
+fun Timer(
+    totalTime: Long
+
+){
+    var currentTime by remember {
+        mutableStateOf(totalTime)
+    }
+    var isTimerRunning by remember{
+        mutableStateOf(true)
+    }
+    LaunchedEffect(key1 = currentTime, key2 = isTimerRunning){
+        if(currentTime >= 0L && isTimerRunning){
+            delay(100L)
+            currentTime-=100L
+            //value = currentTime / totalTime.toFloat()
+        }
+    }
+    if(currentTime <= 0){
+        isTimerRunning = false
+    }
+    Text(
+        text = "Time Remaining: " + if(currentTime>0 && isTimerRunning){(currentTime/1000L).toString()}
+                else{ "done"}
+    )
+}
 
 
 
