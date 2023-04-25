@@ -71,6 +71,9 @@ fun EasyLevel(navController: NavController){
         Row(){
          grid() }
     }
+    if(score.value>=6){
+        navController.navigate(Screen.WinScreen.route)
+    }
 
 }
 var item = mutableListOf<String>(shoppingItems[Random.nextInt(0,23)], shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)])

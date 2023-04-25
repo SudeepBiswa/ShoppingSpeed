@@ -43,7 +43,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.WinScreen.route
         ){
-            Win()
+            Win(navController = navController)
         }
     }
 }
