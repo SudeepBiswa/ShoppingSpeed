@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,35 +26,38 @@ import com.example.shoppingspeed.ui.theme.bubbley
 
 @Composable
 fun HomeScreen(navController: NavController){
-    Image(painter = painterResource(id = R.drawable.backgroundimage), contentDescription = null,
-        contentScale = ContentScale.FillHeight,
-        modifier = Modifier.fillMaxSize())
+    Surface(modifier = Modifier.background(Color.Blue)) {
+        Image(
+            painter = painterResource(id = R.drawable.backgroundimage), contentDescription = null,
+            contentScale = ContentScale.FillHeight,
+            modifier = Modifier.fillMaxSize()
+        )
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .background(Color.Transparent)
-            .fillMaxSize()
-            .padding(top = 15.dp)) {
-        Text("Speed", fontSize = 90.sp, fontFamily = bubbley, color = Color.Red)
-        Text("Shopper", fontSize = 50.sp, fontFamily = bubbley, color = Color.Red)
-    }
-    Column(horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 40.dp)) {
-        Button(
-            onClick = {
-                navController.navigate(route = Screen.Difficulty.route)
-            }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .background(Color.Transparent)
+                .fillMaxSize()
+                .padding(top = 15.dp)
         ) {
-            Text("Start", fontSize = 60.sp, fontFamily = bubbley)
+            Text("Speed", fontSize = 90.sp, fontFamily = bubbley, color = Color.Red)
+            Text("Shopper", fontSize = 50.sp, fontFamily = bubbley, color = Color.Red)
+        }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 40.dp)
+        ) {
+            Button(
+                onClick = {
+                    navController.popBackStack()
+                    navController.navigate(route = Screen.Difficulty.route)
+                }
+            ) {
+                Text("Start", fontSize = 60.sp, fontFamily = bubbley)
+            }
         }
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun HomeScreenPreview(){
-    HomeScreen(navController = rememberNavController())
 }

@@ -43,7 +43,12 @@ fun SetupNavGraph(
         composable(
             route = Screen.WinScreen.route
         ){
-            Win(navController = navController)
+            WinScreen(navController = navController)
+        }
+        composable(
+            route = Screen.LoseScreen.route
+        ){
+            LoseScreen(navController = navController)
         }
     }
 }

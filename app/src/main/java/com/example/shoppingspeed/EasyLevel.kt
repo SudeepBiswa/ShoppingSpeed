@@ -24,8 +24,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.shoppingspeed.ui.theme.bubbley
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.newFixedThreadPoolContext
+import kotlinx.coroutines.withContext
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import org.w3c.dom.Text
+import java.util.concurrent.ExecutorService
 import kotlin.random.Random
 
 /*
@@ -46,6 +49,7 @@ var itemImges = arrayOf(R.drawable.beef, R.drawable.apples, R.drawable.onions, R
     R.drawable.popcorn, R.drawable.pastasauce, R.drawable.potatoes, R.drawable.bread, R.drawable.milk, R.drawable.lemon, R.drawable.oil, R.drawable.cereal, R.drawable.butter, R.drawable.bananas, R.drawable.cheese, R.drawable.strawberries)
 
 var score = mutableStateOf(0)
+var isCountDownTimerRunning = mutableStateOf(true)
 
 @Composable
 fun EasyLevel(navController: NavController){
@@ -59,6 +63,9 @@ fun EasyLevel(navController: NavController){
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)){
             Column() {
                 Timer(totalTime = 10L * 1000L)
+                if(isCountDownTimerRunning.value == false){
+                    navController.navigate(Screen.LoseScreen.route)
+                }
             }
         }
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
@@ -72,11 +79,17 @@ fun EasyLevel(navController: NavController){
          grid() }
     }
     if(score.value>=6){
+        navController.popBackStack()
         navController.navigate(Screen.WinScreen.route)
     }
 
 }
-var item = mutableListOf<String>(shoppingItems[Random.nextInt(0,23)], shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)])
+var item = mutableListOf<String>(shoppingItems[Random.nextInt(0,3)],
+    shoppingItems[Random.nextInt(4,7)],
+    shoppingItems[Random.nextInt(8,11)],
+    shoppingItems[Random.nextInt(12,15)],
+    shoppingItems[Random.nextInt(16,19)],
+    shoppingItems[Random.nextInt(20,23)])
 //var item = arrayOf(shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],)
 //var gridItems = mutableStateOf("")
 @Composable
@@ -86,12 +99,16 @@ fun grid(){
         content ={
             items(24){
                     i ->
+                var isActive by remember {
+                    mutableStateOf(true)
+                }
                var gridItems = shoppingItems[i]
                 Box(
                     modifier = Modifier
                         .clickable {
-                            if (gridItems == item[0] || gridItems == item[1] || gridItems == item[2] || gridItems == item[3] || gridItems == item[4] || gridItems == item[5]) {
+                            if (gridItems == item[0] && isActive || gridItems == item[1] && isActive|| gridItems == item[2] && isActive || gridItems == item[3] && isActive || gridItems == item[4] && isActive || gridItems == item[5] && isActive) {
                                 score.value++
+                                isActive = false
 
                             }
                         }
@@ -101,7 +118,6 @@ fun grid(){
                         .background(Color.Transparent),
                     contentAlignment = Alignment.Center
                 ){
-
                     Image(painter = painterResource(id = itemImges[i]), contentDescription = null)
                         Text(gridItems, fontSize = 20.sp, fontFamily = bubbley, modifier = Modifier.align(Alignment.TopCenter))
 
@@ -160,6 +176,9 @@ fun Timer(
         text = "Time Remaining: " + if(currentTime>0 && isTimerRunning){(currentTime/1000L).toString()}
                 else{ "done"}
     )
+    if(currentTime <= 0 && isTimerRunning == false){
+        isCountDownTimerRunning.value = false
+    }
 }
 
 

@@ -7,4 +7,5 @@ sealed class Screen(val route: String) {
     object NormalLvl: Screen(route = "normal_level")
     object HardLvl: Screen(route = "hard_level")
     object WinScreen: Screen(route = "win")
+    object LoseScreen: Screen(route = "lose")
 }
