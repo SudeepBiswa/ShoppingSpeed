@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.shoppingspeed.ui.theme.bubbley
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.withContext
@@ -48,24 +49,29 @@ var shoppingItems = arrayOf("beef","apples","onions","tomatoes","pork","sugar","
 var itemImges = arrayOf(R.drawable.beef, R.drawable.apples, R.drawable.onions, R.drawable.tomatoes, R.drawable.pork, R.drawable.sugar, R.drawable.bacon, R.drawable.eggs, R.drawable.pasta, R.drawable.rice, R.drawable.pizza, R.drawable.vinegar,
     R.drawable.popcorn, R.drawable.pastasauce, R.drawable.potatoes, R.drawable.bread, R.drawable.milk, R.drawable.lemon, R.drawable.oil, R.drawable.cereal, R.drawable.butter, R.drawable.bananas, R.drawable.cheese, R.drawable.strawberries)
 
-var score = mutableStateOf(0)
-var isCountDownTimerRunning = mutableStateOf(true)
+//var score = mutableStateOf(0)
+//var isCountDownTimerRunning = mutableStateOf(true)
 
 @Composable
-fun EasyLevel(navController: NavController){
+fun EasyLevel(
+    navController: NavController,
+    viewModel: LevelViewModel = LevelViewModel(navController),
+){
+    var currentScore by remember { mutableStateOf(0) }
+    var timeRemaining by remember { viewModel.timeRemaining }
     Column() {
+        LaunchedEffect(key1 = viewModel.timerKey){
+            viewModel.startTimer(didWin = { return@startTimer currentScore >= 6 })
+        }
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)){
             Text("THE SHOP", fontFamily = bubbley, fontSize = 80.sp)
         }
         Row (modifier = Modifier.align(Alignment.CenterHorizontally)){
-            createItems()
+            createItems(currentScore =  currentScore)
         }
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)){
             Column() {
-                Timer(totalTime = 10L * 1000L)
-                if(isCountDownTimerRunning.value == false){
-                    navController.navigate(Screen.LoseScreen.route)
-                }
+                Text(text = "Time Remaining: ${timeRemaining}")
             }
         }
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
@@ -76,13 +82,9 @@ fun EasyLevel(navController: NavController){
             }
         }
         Row(){
-         grid() }
+         grid { currentScore++ }
+        }
     }
-    if(score.value>=6){
-        navController.popBackStack()
-        navController.navigate(Screen.WinScreen.route)
-    }
-
 }
 var item = mutableListOf<String>(shoppingItems[Random.nextInt(0,3)],
     shoppingItems[Random.nextInt(4,7)],
@@ -93,7 +95,9 @@ var item = mutableListOf<String>(shoppingItems[Random.nextInt(0,3)],
 //var item = arrayOf(shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],shoppingItems[Random.nextInt(0,23)],)
 //var gridItems = mutableStateOf("")
 @Composable
-fun grid(){
+fun grid(
+    incrementScore: () -> Unit,
+){
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         content ={
@@ -106,8 +110,8 @@ fun grid(){
                 Box(
                     modifier = Modifier
                         .clickable {
-                            if (gridItems == item[0] && isActive || gridItems == item[1] && isActive|| gridItems == item[2] && isActive || gridItems == item[3] && isActive || gridItems == item[4] && isActive || gridItems == item[5] && isActive) {
-                                score.value++
+                            if (gridItems == item[0] && isActive || gridItems == item[1] && isActive || gridItems == item[2] && isActive || gridItems == item[3] && isActive || gridItems == item[4] && isActive || gridItems == item[5] && isActive) {
+                                incrementScore()
                                 isActive = false
 
                             }
@@ -127,7 +131,9 @@ fun grid(){
 }
 
 @Composable
-fun createItems(){
+fun createItems(
+    currentScore: Int,
+){
         Column(modifier = Modifier.padding(8.dp)) {
             Text(text = item[0])
         }
@@ -147,38 +153,19 @@ fun createItems(){
             Text(text = item[5])
         }
         Column(modifier = Modifier.padding(8.dp)) {
-           Text(text = "${score.value}")
+           Text(text = "$currentScore")
         }
 }
 
 @Composable
 fun Timer(
-    totalTime: Long
+    timeRemaining: Long
 
 ){
-    var currentTime by remember {
-        mutableStateOf(totalTime)
-    }
-    var isTimerRunning by remember{
-        mutableStateOf(true)
-    }
-    LaunchedEffect(key1 = currentTime, key2 = isTimerRunning){
-        if(currentTime >= 0L && isTimerRunning){
-            delay(100L)
-            currentTime-=100L
-            //value = currentTime / totalTime.toFloat()
-        }
-    }
-    if(currentTime <= 0){
-        isTimerRunning = false
-    }
     Text(
-        text = "Time Remaining: " + if(currentTime>0 && isTimerRunning){(currentTime/1000L).toString()}
+        text = "Time Remaining: " + if(timeRemaining>0){(timeRemaining/1000L).toString()}
                 else{ "done"}
     )
-    if(currentTime <= 0 && isTimerRunning == false){
-        isCountDownTimerRunning.value = false
-    }
 }
 
 
